@@ -10,6 +10,8 @@ from typing import Optional, List, Dict, Any
 import uvicorn
 import nest_asyncio
 from pyngrok import ngrok
+import boto3
+import json
 
 # --- 設定 ---
 # モデル名を設定
@@ -60,6 +62,7 @@ class GenerationResponse(BaseModel):
 # モデルのグローバル変数
 model = None
 
+'''
 def load_model():
     """推論用のLLMモデルを読み込む"""
     global model  # グローバル変数を更新するために必要
@@ -79,6 +82,23 @@ def load_model():
         error_msg = f"モデル '{config.MODEL_NAME}' の読み込みに失敗: {e}"
         print(error_msg)
         traceback.print_exc()  # 詳細なエラー情報を出力
+        return None
+'''
+
+def load_model():
+    """Nova Pro用のAPIクライアントを準備する"""
+    global model
+    try:
+        client = boto3.client(
+            service_name='bedrock-runtime',
+            region_name='us-east-1',  # 例: リージョンに合わせてください
+        )
+        print("Nova Proクライアントの準備ができました")
+        model = client  # グローバル変数に保存
+        return client
+    except Exception as e:
+        print(f"Nova Proクライアントの準備に失敗しました: {e}")
+        traceback.print_exc()
         return None
 
 def extract_assistant_response(outputs, user_prompt):
