@@ -287,10 +287,13 @@ if __name__ == "__main__":
     baseline_ok = ModelTester.compare_with_baseline(metrics)
     print(f"ベースライン比較: {'合格' if baseline_ok else '不合格'}")
 
+
 def test_speed_accuracy():
     data = DataLoader.load_titanic_data()
     X, y = DataLoader.preprocess_titanic_data(data)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42
+    )
 
     # モデルの訓練
     model_params = {"max_iter": 1000, "random_state": 42}
@@ -298,8 +301,12 @@ def test_speed_accuracy():
 
     # 精度と推論時間の測定
     start_time = time.time()
-    accuracy, inference_time = ModelTester.evaluate_model(model, X_test, y_test).values()
+    accuracy, inference_time = ModelTester.evaluate_model(
+        model, X_test, y_test
+    ).values()
     end_time = time.time()
 
     print(f"[テスト用] 精度: {accuracy:.4f}")
-    print(f"[テスト用] 推論時間: {inference_time:.4f}秒（測定時間: {end_time - start_time:.4f}秒）")
+    print(
+        f"[テスト用] 推論時間: {inference_time:.4f}秒（測定時間: {end_time - start_time:.4f}秒）"
+    )
